@@ -10,7 +10,7 @@ const showRepo = document.querySelector(".repos");
 const repoDetails = document.querySelector(".repo-data");
 //back to repo gallery button// 
 const button = document.querySelector(".view-repos");
-//
+//search input box//
 const filterInput = document.querySelector(".filter-repos");
 
 //async function fetching profile info with API//
@@ -126,9 +126,9 @@ filterInput.addEventListener("input", function(e) {
     const searchText = e.target.value;
     //selects all elements with "repo" class//
     const repos = document.querySelectorAll(".repo");
-    //
+
     const searchTextCase = searchText.toLowerCase();
-    //
+
     for (const repo of repos) {
        const repoSearch = repo.innerText.toLowerCase();
 
