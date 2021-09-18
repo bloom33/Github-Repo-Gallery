@@ -4,6 +4,10 @@ const profile = document.querySelector(".overview");
 const username = "bloom33";
 //repo list//
 const repoList = document.querySelector(".repo-list");
+//where repo info will appear//
+const showRepo = document.querySelector(".repos");
+//displays details of individual repo//
+const repoDetails = document.querySelector(".repo-data");
 
 //async function fetching profile info with API//
 const getProfileInfo = async function() {
@@ -51,6 +55,53 @@ const repoInfo = function (repos) {
         li.innerHTML = `<h3>${repo.name}</h3>`; 
         repoList.append(li);
     }
+}
+
+//event listener//
+repoList.addEventListener("click", function(e) {
+    if (e.target.matches("h3")) {
+        let repoName = e.target.innerText;
+
+       getRepoInfo(repoName);
+    }
+}); 
+
+//async function which fetches specific repo info// 
+const getRepoInfo = async function (repoName) {
+    const fetchRepo = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+    const gitRepoInfo = await fetchRepo.json();
+    console.log(gitRepoInfo);
+
+    //fetch repo languages//
+    const fetchLanguages = await fetch(gitRepoInfo.languages_url);
+    const languageData = await fetchLanguages.json();
+
+    //list repo languages//
+    const languages = [];
+    for (const key in languageData) {
+        languages.push(key)
+    };
+
+    displayRepoInfo(gitRepoInfo, languages);
+}; 
+
+//display specific repo info//
+const displayRepoInfo = function (gitRepoInfo, languages) {
+    repoDetails.innerHTML = "";
+    
+    const repoDecription = document.createElement("div");
+    repoDecription.innerHTML = `
+    <h3>Name: ${gitRepoInfo.name}</h3>
+    <p>Description: ${gitRepoInfo.description}</p>
+    <p>Default Branch: ${gitRepoInfo.branch}</p>
+    <p>Languages: ${languages.join(", ")}</p>
+    <a class="visit" href="${gitRepoInfo.html_url}" target="_blank" rel="noreferrer noopener">
+    View Repo on GitHub!</a>`; 
+
+    repoDetails.append(repoDecription);
+
+    repoDetails.classList.remove("hide");
+    repoList.classList.add("hide");
 }
 
 
