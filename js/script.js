@@ -8,6 +8,10 @@ const repoList = document.querySelector(".repo-list");
 const showRepo = document.querySelector(".repos");
 //displays details of individual repo//
 const repoDetails = document.querySelector(".repo-data");
+//back to repo gallery button// 
+const button = document.querySelector(".view-repos");
+//
+const filterInput = document.querySelector(".filter-repos");
 
 //async function fetching profile info with API//
 const getProfileInfo = async function() {
@@ -47,7 +51,7 @@ const getRepoList = async function () {
     repoInfo(repoData);
 };
 
-//function to display info about each repo//
+//function to display list of repos//
 const repoInfo = function (repos) {
     for (let repo of repos ) {
         let li = document.createElement("li");
@@ -55,6 +59,9 @@ const repoInfo = function (repos) {
         li.innerHTML = `<h3>${repo.name}</h3>`; 
         repoList.append(li);
     }
+
+    //display search input//
+    filterInput.classList.remove("hide");
 }
 
 //event listener//
@@ -102,7 +109,38 @@ const displayRepoInfo = function (gitRepoInfo, languages) {
 
     repoDetails.classList.remove("hide");
     repoList.classList.add("hide");
-}
+    //display "back to repo" button//
+    button.classList.remove("hide");
+};
+
+//event listener for "back to repo" button//
+button.addEventListener("click", function(e) {
+    showRepo.classList.remove("hide");
+    repoDetails.classList.add("hide");
+    button.classList.add("hide");
+});
+
+//search event listener//
+filterInput.addEventListener("input", function(e) {
+    //target values of search box//
+    const searchText = e.target.value;
+    //selects all elements with "repo" class//
+    const repos = document.querySelectorAll(".repo");
+    //
+    const searchTextCase = searchText.toLowerCase();
+    //
+    for (const repo of repos) {
+       const repoSearch = repo.innerText.toLowerCase();
+
+       if (repoSearch.includes(searchTextCase)) {
+           repo.classList.remove("hide");
+
+       } else {
+           repo.classList.add("hide");       }
+    }
+
+
+})
 
 
 getProfileInfo(); 
